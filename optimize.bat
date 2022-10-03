@@ -150,21 +150,6 @@ rd "C:\OneDriveTemp" /Q /S >nul 2>&1
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 :: Set Hibernation file to disabled
 powercfg /h off >nul 2>&1
 
@@ -447,9 +432,6 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer" /v "ShowRecent
 :: Disable Timeline
 reg add "HKLM\Software\Policies\Microsoft\Windows\System" /v "EnableActivityFeed" /t REG_DWORD /d "0" /f >nul 2>&1
 
-:: Enable clipboard history
-reg add "HKCU\Software\Microsoft\Clipboard" /v "EnableClipboardHistory" /t REG_DWORD /d "1" /f >nul 2>&1
-
 :: Remove "Edit with photos" from context menus
 reg add "HKCR\AppX43hnxtbyyps62jhe9sqpdzxn1790zetc\Shell\ShellEdit" /v "ActivatableClassId" /t REG_SZ /d "App.AppX65n3t4j73ch7cremsjxn7q8bph1ma8jw.mca" /f >nul 2>&1
 reg add "HKCR\AppX43hnxtbyyps62jhe9sqpdzxn1790zetc\Shell\ShellEdit" /v "PackageId" /t REG_SZ /d "Microsoft.Windows.Photos_2017.18062.12990.0_x64__8wekyb3d8bbwe" /f >nul 2>&1
@@ -694,6 +676,16 @@ powershell.exe "Get-AppxProvisionedPackage -Online | where Displayname -EQ *Micr
 powershell.exe "Get-AppxProvisionedPackage -Online | where Displayname -EQ *Microsoft.WebMediaExtensions* | Remove-AppxProvisionedPackage -Online"
 powershell.exe "Get-AppxProvisionedPackage -Online | where Displayname -EQ *Microsoft.MixedReality.Portal* | Remove-AppxProvisionedPackage -Online"
 
+
+:: Disable Maps Broker service
+sc stop MapsBroker >nul 2>&1
+sc config MapsBroker start= disabled >nul 2>&1
+
+
+
+:: Enable TRIM if it isn't already, and run TRIM
+fsutil behavior set DisableDeleteNotify 0
+powershell -Command "Optimize-Volume -DriveLetter C -ReTrim"
 
 
 

@@ -9,6 +9,7 @@ Simply unzip it and run `optimize.bat`
 ### What does it do?
 This is a growing list of optimizations this script performs:
 
+ - Enable TRIM and run after script is finished
  - Optimize the MFT
  - Optimize the USN journal
  - Optimize misc metadata
@@ -38,6 +39,7 @@ This is a growing list of optimizations this script performs:
  - Disable Windows Defender Smart Screen Filter
  - Disable Content Delivery Manager
  - Disable suggested apps
+ - Disable Maps Broker service
  - Disable Network Location Wizard prompts
  - Disable Gamebar
  - Disable automatic updates
