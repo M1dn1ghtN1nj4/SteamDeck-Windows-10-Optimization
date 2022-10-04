@@ -6,7 +6,6 @@ Title Windows 10 for Steam Deck Optimization Script v1.00 by M1dn1ghtN1nj4
 @cd /d "%~dp0"
 cd data
 
-
 :main
 cls
 Echo/
@@ -35,33 +34,30 @@ if not %choice% == 2 goto main
 :OE
 cls
 Echo/
-Echo  Optimizing Windows for Steam Deck...
-
+Echo  =====================================
+Echo  = Optimizing Windows for Steam Deck =
+Echo  =====================================
 Echo/
 Echo    Optimizing the MFT...
 Contig64.exe c:\$Mft >nul 2>&1
 
-Echo/
 Echo    Optimizing the USN journal...
 fsutil usn deletejournal /D C: >nul 2>&1
 @ping localhost -n 5 >NUL
 fsutil usn createjournal m=1000 a=100 C: >nul 2>&1
 
-Echo/
 Echo    Cleaning up Windows temp files...
 rd /s /q %temp% >nul 2>&1
 mkdir %temp% >nul 2>&1
 rd /s /q c:\windows\temp\ >nul 2>&1
 mkdir c:\windows\temp\ >nul 2>&1
 
-Echo/
 Echo    Removing old Windows Update files...
 net stop wuauserv >nul 2>&1
 ren %systemroot%\SoftwareDistribution SoftwareDistribution.old >nul 2>&1
 net start wuauserv >nul 2>&1
 rd /s/q %systemroot%\SoftwareDistribution.old >nul 2>&1
 
-Echo/
 Echo    Optimizing Metadata...
 Contig64.exe c:\$AttrDef >nul 2>&1
 Echo    Processing:  $AttrDef
@@ -82,19 +78,19 @@ Echo    Processing:  $UpCase
 Contig64.exe c:\$Volume >nul 2>&1
 Echo    Processing:  $Volume
 
-Echo/
-Echo    Clearing Chrome cache...
+Echo    Clearing browser caches...
+:: Chrome
 set ChromeDir=C:\Users\%USERNAME%\AppData\Local\Google\Chrome\User Data >nul 2>&1
 del /q /s /f "%ChromeDir%" >nul 2>&1
 rd /s /q "%ChromeDir%" >nul 2>&1
 
-Echo    Clearing Firefox cache...
+:: Firefox
 set DataDir=C:\Users\%USERNAME%\AppData\Local\Mozilla\Firefox\Profiles >nul 2>&1
 del /q /s /f "%DataDir%" >nul 2>&1
 rd /s /q "%DataDir%" >nul 2>&1
 for /d %%x in (C:\Users\%USERNAME%\AppData\Roaming\Mozilla\Firefox\Profiles\*) do del /q /s /f %%x\*sqlite >nul 2>&1
 
-Echo    Clearing Internet Explorer cache...
+:: Internet Explorer
 set DataDir=C:\Users\%USERNAME%\AppData\Local\Microsoft\Intern~1 >nul 2>&1
 del /q /s /f "%DataDir%" >nul 2>&1
 rd /s /q "%DataDir%" >nul 2>&1
@@ -108,7 +104,7 @@ set Cookies=C:\Users\%USERNAME%\AppData\Roaming\Microsoft\Windows\Cookies >nul 2
 del /q /s /f "%Cookies%" >nul 2>&1
 rd /s /q "%Cookies%" >nul 2>&1
 
-Echo    Clearing Safari cache...
+:: Safari
 set DataDir=C:\Users\%USERNAME%\AppData\Local\Applec~1\Safari >nul 2>&1
 set DataDir2=C:\Users\%USERNAME%\AppData\Roaming\Applec~1\Safari >nul 2>&1
 del /q /s /f "%DataDir%\History" >nul 2>&1
@@ -118,7 +114,7 @@ del /q /s /f "%DataDir%\WebpageIcons.db" >nul 2>&1
 del /q /s /f "%DataDir2%" >nul 2>&1
 rd /s /q "%DataDir2%" >nul 2>&1
 
-Echo    Clearing Opera cache...
+:: Opera
 set DataDir=C:\Users\%USERNAME%\AppData\Local\Opera\Opera >nul 2>&1
 set DataDir2=C:\Users\%USERNAME%\AppData\Roaming\Opera\Opera >nul 2>&1
 del /q /s /f "%DataDir%" >nul 2>&1
@@ -126,20 +122,16 @@ rd /s /q "%DataDir%" >nul 2>&1
 del /q /s /f "%DataDir2%" >nul 2>&1
 rd /s /q "%DataDir2%" >nul 2>&1
 
-Echo/
-Echo    Clearing Flash cookies...
+:: Flash cookies
 set FlashCookies=C:\Users\%USERNAME%\AppData\Roaming\Macromedia\Flashp~1 >nul 2>&1
 del /q /s /f "%FlashCookies%" >nul 2>&1
 rd /s /q "%FlashCookies%" >nul 2>&1
 
+Echo/
+Echo    ===== Performing Optimizations =====
+Echo    == This will take several minutes ==
+Echo    ======== Please be patient =========
 
-
-
-
-
-
-
-REMOVING WINDOWS APPLICATIONS::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Uninstall OneDrive
 taskkill /F /IM "OneDrive.exe" >nul 2>&1
 %SystemRoot%\SysWOW64\OneDriveSetup.exe /uninstall >nul 2>&1
@@ -148,15 +140,11 @@ rd "%LocalAppData%\Microsoft\OneDrive" /Q /S >nul 2>&1
 rd "%ProgramData%\Microsoft OneDrive" /Q /S >nul 2>&1
 rd "C:\OneDriveTemp" /Q /S >nul 2>&1
 
-
-
 :: Set Hibernation file to disabled
 powercfg /h off >nul 2>&1
 
-
 :: Disable Windows Defender SmartScreen Filter
 reg add "HKLM\Software\Policies\Microsoft\Windows\System" /v "EnableSmartScreen" /t REG_DWORD /d "0" /f >nul 2>&1
-
 
 :: Disable all Content Delivery Manager features
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "ContentDeliveryAllowed" /t REG_DWORD /d "0" /f >nul 2>&1
@@ -224,10 +212,8 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\S
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\SuggestedApps" /v "USATODAY.USATODAY_wy7mw3214mat8" /t REG_DWORD /d "0" /f >nul 2>&1
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager\SuggestedApps" /v "WinZipComputing.WinZipUniversal_3ykzqggjzj4z0" /t REG_DWORD /d "0" /f >nul 2>&1
 
-
 :: Disable Network Location Wizard prompts
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Network\NewNetworkWindowOff" /f >nul 2>&1
-
 
 :: Disable Gamebar
 reg add "HKCU\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_DWORD /d "0" /f >nul 2>&1
@@ -270,7 +256,6 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Windows Search" /v "Cort
 reg add "HKLM\Software\Policies\Microsoft\Windows\Windows Search" /v "AllowCortana" /t REG_DWORD /d "0" /f >nul 2>&1
 reg add "HKLM\Software\Policies\Microsoft\Windows\Windows Search" /v "DisableWebSearch" /t REG_DWORD /d "1" /f >nul 2>&1
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE" /v "DisableVoice" /t REG_DWORD /d "1" /f >nul 2>&1
-
 
 
 :: Add "Open Command Prompt here" to context menus
@@ -321,23 +306,18 @@ SetACL.exe -silent -on "HKCR\Directory\Background\shell\Powershell\command" -ot 
 SetACL.exe -silent -on "HKCR\Directory\Background\shell\Powershell\command" -ot reg -actn ace -ace "n:Administrators;p:full"
 reg delete "HKCR\Directory\Background\shell\Powershell" /f >nul 2>&1
 
-
 :: Disable online tips in Settings
 reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "AllowOnlineTips" /t REG_DWORD /d "0" /f >nul 2>&1
-
 
 :: Remove 3D Objects from This PC
 reg delete "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}" /f >nul 2>&1
 reg delete "HKLM\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}" /f >nul 2>&1
 
-
 :: Disable search history in File Explorer
 reg add "HKCU\Software\Policies\Microsoft\Windows\Explorer" /v "DisableSearchBoxSuggestions" /t REG_DWORD /d "1" /f >nul 2>&1
 
-
 :: Remove OneDrive from Navigation Pane
 reg add "HKCR\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /v "System.IsPinnedToNameSpaceTree" /t REG_DWORD /d "0" /f >nul 2>&1
-
 
 :: Disable suggested apps Windows Ink WorkSpace
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\PenWorkspace" /v "PenWorkspaceAppSuggestionsEnabled" /t REG_DWORD /d "0" /f >nul 2>&1
@@ -459,15 +439,6 @@ reg add "HKCU\Software\Policies\Microsoft\MicrosoftEdge\TabPreloader" /v "AllowP
 
 :: Disable Microsoft Edge tab preloading
 reg add "HKCU\Software\Policies\Microsoft\MicrosoftEdge\TabPreloader" /v "AllowTabPreloading" /t REG_DWORD /d "0" /f >nul 2>&1
-
-
-
-
-
-
-
-
-
 
 :: Remove potential bloat
 powershell.exe "Get-AppxPackage *Microsoft.3DBuilder* | Remove-AppxPackage"
@@ -676,21 +647,13 @@ powershell.exe "Get-AppxProvisionedPackage -Online | where Displayname -EQ *Micr
 powershell.exe "Get-AppxProvisionedPackage -Online | where Displayname -EQ *Microsoft.WebMediaExtensions* | Remove-AppxProvisionedPackage -Online"
 powershell.exe "Get-AppxProvisionedPackage -Online | where Displayname -EQ *Microsoft.MixedReality.Portal* | Remove-AppxProvisionedPackage -Online"
 
-
 :: Disable Maps Broker service
 sc stop MapsBroker >nul 2>&1
 sc config MapsBroker start= disabled >nul 2>&1
 
-
-
 :: Enable TRIM if it isn't already, and run TRIM
 fsutil behavior set DisableDeleteNotify 0
 powershell -Command "Optimize-Volume -DriveLetter C -ReTrim"
-
-
-
-
-
 
 Echo/
 Echo  -- EVERYTHING HAS BEEN OPTIMIZED --
@@ -698,11 +661,8 @@ Echo/
 Pause
 Goto main
 
-
-
-
 :exit
 cls
 Echo/
-@ping localhost -n 5 >NUL
+@ping localhost -n 2 >NUL
 exit
